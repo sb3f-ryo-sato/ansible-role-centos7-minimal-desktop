@@ -1,0 +1,19 @@
+---
+- name: Install packages
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "vlgothic*-fonts"
+    - "ipa*-fonts"
+    - "@emacs"
+    - "@network-file-system-client"
+
+- name: Enable and start autofs
+  become: yes
+  systemd:
+    name: autofs
+    daemon_reload: yes
+    enabled: yes
+    state: started

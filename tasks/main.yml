@@ -1,0 +1,28 @@
+---
+- name: Install packages
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "@x11"
+    - "@fonts"
+    - gnome-classic-session
+    - gnome-terminal
+
+- name: Link default.target to graphical.target
+  become: yes
+  file:
+    src: /lib/systemd/system/graphical.target
+    dest: /etc/systemd/system/default.target
+    owner: root
+    group: root
+    seuser: system_u
+    serole: object_r
+    setype: systemd_unit_file_t
+    selevel: s0
+    state: link
+
+- name: Install additional packages
+  include: install-additional-packages.yml
+  when: install_additional_packages == true
